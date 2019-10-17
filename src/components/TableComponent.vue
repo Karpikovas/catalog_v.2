@@ -2,14 +2,16 @@
     <div>
         <table class="table" >
             <thead>
+            <tr>
                 <th v-for="field in fields" :key="field.key">{{ field.label  }} </th>
+            </tr>
             </thead>
 
             <tbody>
             <template v-for="item in itemsOnPage">
                 <tr>
                     <td v-for="field in fields">
-                        <slot :name="field.key" :data="item" :toggleDetails="toggleDetail" >{{ getFieldData(item, field.key) }}</slot>
+                        <slot :name="field.key" :data="item" :toggleDetails="toggleDetail" >{{  item[field.key] || '' }}</slot>
                     </td>
                 </tr>
 
@@ -33,6 +35,7 @@
                     </a>
                 </li>
                 <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
                 <li class="page-item">
                     <a class="page-link" href="#" aria-label="Next" @click="nextPage">
                         <span aria-hidden="true">&raquo;</span>
@@ -55,21 +58,14 @@
     },
     methods: {
 
-      getFieldData(object, property) {
-
-        if (object.hasOwnProperty(property)) {
-          return object[property]
-        } else {
-          return null
-        }
-      },
-
       toggleDetail: function (item) {
 
         if (item.hasOwnProperty('detailIsShowing')) {
+
           item.detailIsShowing = !item.detailIsShowing
         } else {
-          item.detailIsShowing = true
+            this.$set(item, 'detailIsShowing', true)
+          //item.detailIsShowing = true
         }
 
         let targetIndex = this.items.findIndex(object => object.id === item.id)

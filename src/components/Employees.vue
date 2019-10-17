@@ -15,9 +15,11 @@
         <!--------------------- Колонка с подразделениями  -------------------->
 
                 <div class="col-2 position-fixed divider">
-                    <ul class="nav flex-column mt-2 justify-content-center text-center">
+                    <ul class="nav flex-column mt-2 text-center">
 
-                        <span class="navbar-text mb-3">Подразделения</span>
+                        <li class="nav-item" >
+                            <span class="navbar-text mb-3">Подразделения</span>
+                        </li>
 
                         <li v-for="subdivision in subdivisions" class="nav-item">
                             <a class="nav-link" href="#">{{ subdivision.name }}</a>
@@ -100,6 +102,7 @@
 
             </div>
         </template>
+
     </div>
 </template>
 
@@ -111,7 +114,6 @@
       data() {
             return {
                 inProgress: false,
-                testFi: [{label: 'Фамилия', key: 'surname'},  {label: 'Имя', key: 'name'} ],
                 fields: [
                     {
                         key: 'fullName',
@@ -135,8 +137,23 @@
                     }
                 ],
                 subdivisions: [ { name: 'Южное' }, { name: 'Северное' }, { name: 'Западное' }, { name: 'Восточное' }, ],
+                items: [],
                 employees: [ { name: 'Ivanov', surname: 'Ivan', patronymic: 'Ivanovich', id: 1, subdivision: 'Северное', post: 'Директор' }, { name: 'Ivanov', surname: 'Ivan', patronymic: 'Ivanovich', id: 2, subdivision: 'Северное', post: 'Директор' } ]
             }
+        },
+        computed: {
+            // employees: function () {
+            //     let newItems = this.$store.getters.employees.slice().sort(function (a, b) {
+            //         return (a.surname > b.surname) ? 1 : ((b.surname > a.surname) ? -1 : 0)
+            //     })
+            //     if (this.currentFilter) {
+            //         return newItems.filter((item) => {
+            //             return item.subdivision === this.currentFilter
+            //         })
+            //     } else {
+            //         return  newItems
+            //     }
+            // }
         },
           methods: {
                 changeFilter: function (name) {
@@ -162,44 +179,12 @@
                 //     let targetIndex = this.employees.findIndex(item => item.id === employee.id)
                 //     this.employees.splice(targetIndex, 1, employee);
                 // }
-          }
+          },
+        mounted() {
+            this.$store.dispatch('getEmployees')
+        }
     }
 </script>
 
 <style scoped lang="less">
-    .container-fluid {
-        padding-top: 70px;
-
-
-        .nav {
-            font-weight: bold;
-
-            li.nav-item a {
-                color: green;
-
-                &.disabled {
-                    color: dimgrey;
-                }
-            }
-
-            span {
-                border-bottom: 2px solid #dee2e6;
-                border-radius: 1px;
-            }
-
-        }
-    }
-
-    .divider {
-        border-right: 1px solid #dee2e6;
-        border-radius: 1px;
-        height: 100%;
-    }
-
-    .spinner-border {
-        position: absolute;
-        top: 40%;
-        width: 5rem;
-        height: 5rem;
-    }
 </style>
