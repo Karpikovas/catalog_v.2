@@ -1,6 +1,5 @@
 <template>
-  <div id="app">
-    <div class="main">
+  <div id="app" class="main">
       <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
           <a class="navbar-brand" href="/">
@@ -22,7 +21,6 @@
       </header>
       <router-view/>
     </div>
-  </div>
 </template>
 
 <script>
