@@ -32,10 +32,10 @@
             <li tabindex="-1" class="page-item" :class="{ disabled: currentPage === 1 }" @click="currentPage--">
                 ‹
             </li>
-            <li tabindex="-1" class="page-item" @click="currentPage++" :class="{ disabled: currentPage === items.length / perPage }">
+            <li tabindex="-1" class="page-item" @click="currentPage++" :class="{ disabled: currentPage >= items.length / perPage }">
                 ›
             </li>
-            <li tabindex="-1" class="page-item" :class="{ disabled: currentPage === items.length / perPage }"  @click="currentPage = items.length / perPage">
+            <li tabindex="-1" class="page-item" :class="{ disabled: currentPage >= items.length / perPage }"  @click="currentPage = items.length / perPage">
                 »
             </li>
         </ul>
@@ -48,9 +48,13 @@
     props: {
       fields: Array,
       items: Array,
-      perPage: Number,
-      currentPage: Number
+      perPage: Number
     },
+      data () {
+        return {
+            currentPage: 1
+        }
+      },
     computed: {
       itemsOnPage() {
         let start = (this.currentPage - 1) * this.perPage
@@ -70,7 +74,6 @@
         }
 
         let targetIndex = this.items.findIndex(object => object.id === item.id)
-        console.log(targetIndex)
         this.items.splice(targetIndex, 1, item);
 
       }

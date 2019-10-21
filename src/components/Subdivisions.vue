@@ -27,9 +27,6 @@
 
         return this.$store.getters.subdivisions
         }
-    },
-    mounted() {
-      this.$store.dispatch('getSubdivisions')
     }
   }
 </script>

@@ -19,21 +19,24 @@
         </nav>
 
       </header>
-      <modal-component v-model="isOpened"></modal-component>
+      <modal-add v-model="isOpened" title="Добавление"></modal-add>
       <router-view/>
     </div>
 </template>
 
 <script>
-  import ModalComponent from "./components/ModalComponent";
+  import ModalAdd from "./components/modals/ModalAddEmployee";
   export default {
     name: "App",
-    components: {ModalComponent},
+    components: {ModalAdd},
     data() {
       return {
         isOpened: false
       }
-    }
+    },
+      mounted() {
+        this.$store.dispatch('getSubdivisions')
+      }
   }
 </script>
 

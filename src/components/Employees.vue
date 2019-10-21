@@ -21,8 +21,12 @@
                             <span class="navbar-text mb-3">Подразделения</span>
                         </li>
 
-                        <li v-for="subdivision in subdivisions" class="nav-item">
-                            <span class="nav-link" href="#">{{ subdivision.name }}</span>
+                        <li class="nav-item" @click="changeFilter('')" >
+                            <span class="nav-link mb-3" >Все</span>
+                        </li>
+
+                        <li v-for="subdivision in subdivisions" class="nav-item" @click="changeFilter(subdivision.name)">
+                            <span class="nav-link" href="#" >{{ subdivision.name }}</span>
                         </li>
                         <li class="nav-item mt-5">
                             <a href="/subdivisions">
@@ -41,7 +45,6 @@
                         :fields="fields"
                         :items="employees"
                         :perPage="10"
-                        :currentPage="currentPage"
                     >
                         <template v-slot:fullName="row">
                             {{ fullName(row.data.surname, row.data.name, row.data.patronymic) }}
@@ -55,10 +58,10 @@
 
                         <template v-slot:actions="row">
                             <div class="btn-group btn-group-sm" role="group">
-                                <button type="button" class="btn btn-warning" v-on:click="modalEditShow(row.item)">
+                                <button type="button" class="btn btn-warning" @click="modalEditShow(row.data)">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button type="button" class="btn btn-danger" v-on:click="modalDeleteShow(row.item.id)">
+                                <button type="button" class="btn btn-danger" v-on:click="modalDeleteShow(row.data)">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -66,7 +69,7 @@
 
                         <template v-slot:details="row">
                             <div class="card flex-row">
-                                <img src="https://i1.wp.com/pbs.twimg.com/profile_images/1027496003023319040/wc74uThS_200x200.jpg" class="card-img-left">
+                                <img :src="'http://musiclibrary/employees/' + row.data.id +'/photo?date=' + date" class="card-img-left">
 
                                 <div class="card-body">
                                     <div class="row mb-2">
@@ -102,7 +105,11 @@
                                 </div>
                             </div>
                         </template>
+
                     </table-component>
+
+                    <modal-edit v-model="isOpened" :employee="currentEmployee" title="Редактировать"></modal-edit>
+                    <modal-delete v-model="isOpenedDelete" :employee="currentEmployee"></modal-delete>
                 </div>
 
             </div>
@@ -114,14 +121,20 @@
 
 <script>
     import TableComponent from "./TableComponent";
-    import ModalComponent from "./ModalComponent";
+    import ModalEdit from "./modals/ModalEditEmployee";
+    import ModalDelete from "./modals/ModalDeleteEmployee";
+
     export default {
         name: "Employees",
-      components: {ModalComponent, TableComponent},
+      components: { ModalEdit, ModalDelete, TableComponent },
       data() {
             return {
+                date: new Date(),
                 inProgress: false,
-                currentPage: 1,
+                currentFilter: '',
+                isOpened: false,
+                isOpenedDelete: false,
+                currentEmployee: null,
                 fields: [
                     {
                         key: 'fullName',
@@ -146,12 +159,12 @@
                 ],
                 subdivisions: [ { name: 'Южное' }, { name: 'Северное' }, { name: 'Западное' }, { name: 'Восточное' }, ],
                 items: [],
-                //employees: [ { name: 'Ivanov', surname: 'Ivan', patronymic: 'Ivanovich', id: 1, subdivision: 'Северное', post: 'Директор' }, { name: 'Ivanov', surname: 'Ivan', patronymic: 'Ivanovich', id: 2, subdivision: 'Северное', post: 'Директор' } ]
             }
         },
         computed: {
             employees: function () {
 
+                this.date = new Date()
                 let newItems = this.$store.getters.employees.slice().sort(function (a, b) {
                     return (a.surname > b.surname) ? 1 : ((b.surname > a.surname) ? -1 : 0)
                 })
@@ -178,6 +191,13 @@
                     }
                     return fullName
                 },
+              modalEditShow(employee) {
+                    this.currentEmployee = employee
+                    this.isOpened = true
+                },
+              modalDeleteShow(employee) {
+                  this.isOpenedDelete = true
+              }
 
                 // toggleDetail: function (employee) {
                 //

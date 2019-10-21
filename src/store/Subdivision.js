@@ -3,6 +3,7 @@ import axios from 'axios'
 export default {
     state: {
         subdivisions: [],
+        posts: [],
         inProgress: false
     },
     mutations: {
@@ -12,6 +13,10 @@ export default {
 
         getSubdivisions: (state, payload) => {
             state.subdivisions = payload
+        },
+
+        getPosts: (state, payload) => {
+            state.posts = payload
         },
 
         updateSubdivision: (state, payload) => {
@@ -27,8 +32,8 @@ export default {
         getSubdivisions ({commit}) {
             axios.get('http://musiclibrary/subdivisions')
                 .then(response => {
-                    console.log(response)
                     commit('getSubdivisions', response.data.data.subdivisions)
+                    commit('getPosts', response.data.data.posts)
                 })
         },
         updateSubdivision ({commit}, payload) {
@@ -38,6 +43,9 @@ export default {
     getters: {
         subdivisions (state) {
             return state.subdivisions
+        },
+        posts (state) {
+            return state.posts
         }
     }
 }

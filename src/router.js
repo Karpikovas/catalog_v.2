@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Employees from './components/Employees'
 import Subdivisions from './components/Subdivisions'
 
-import Modal from './components/ModalComponent'
+import Modal from './components/modals/ModalEditEmployee'
 
 Vue.use(Router)
 
