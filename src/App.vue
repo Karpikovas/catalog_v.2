@@ -10,23 +10,29 @@
 
             <ul class="navbar-nav ml-auto">
               <li class="nav-item active">
-                <button class="btn btn-pill btn-success my-2 my-sm-0" type="submit">Добавить сотрудника</button>
+                <button class="btn btn-pill btn-success my-2 my-sm-0" @click="isOpened = !isOpened">Добавить сотрудника</button>
               </li>
             </ul>
 
 
 
         </nav>
+
       </header>
+      <modal-component v-model="isOpened"></modal-component>
       <router-view/>
     </div>
 </template>
 
 <script>
+  import ModalComponent from "./components/ModalComponent";
   export default {
     name: "App",
-    mounted() {
-      console.log(this.$children)
+    components: {ModalComponent},
+    data() {
+      return {
+        isOpened: false
+      }
     }
   }
 </script>

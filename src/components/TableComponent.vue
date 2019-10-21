@@ -25,35 +25,37 @@
             </tbody>
 
         </table>
-
-        <nav>
-            <ul class="pagination justify-content-end mr-5">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous" @click="previousPage">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next" @click="nextPage">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+        <ul class="pagination mr-5 b-pagination justify-content-end">
+            <li tabindex="-1" class="page-item" :class="{ disabled: currentPage === 1 }" @click="currentPage = 1">
+                «
+            </li>
+            <li tabindex="-1" class="page-item" :class="{ disabled: currentPage === 1 }" @click="currentPage--">
+                ‹
+            </li>
+            <li tabindex="-1" class="page-item" @click="currentPage++" :class="{ disabled: currentPage === items.length / perPage }">
+                ›
+            </li>
+            <li tabindex="-1" class="page-item" :class="{ disabled: currentPage === items.length / perPage }"  @click="currentPage = items.length / perPage">
+                »
+            </li>
+        </ul>
     </div>
 </template>
 
 <script>
   export default {
     name: "TableComponent",
-    props: ["fields", "items", "perPage", "currentPage"],
+    props: {
+      fields: Array,
+      items: Array,
+      perPage: Number,
+      currentPage: Number
+    },
     computed: {
       itemsOnPage() {
-        return this.items.slice((this.currentPage - 1) * this.perPage)
+        let start = (this.currentPage - 1) * this.perPage
+        let end = start + this.perPage
+        return this.items.slice(start, end)
       }
     },
     methods: {
@@ -65,22 +67,12 @@
           item.detailIsShowing = !item.detailIsShowing
         } else {
             this.$set(item, 'detailIsShowing', true)
-          //item.detailIsShowing = true
         }
 
         let targetIndex = this.items.findIndex(object => object.id === item.id)
         console.log(targetIndex)
         this.items.splice(targetIndex, 1, item);
 
-      },
-
-      nextPage: function () {
-        this.currentPage++
-      },
-
-      previousPage: function () {
-        if (this.currentPage > 1)
-            this.currentPage--
       }
     }
   }

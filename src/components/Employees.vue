@@ -22,10 +22,13 @@
                         </li>
 
                         <li v-for="subdivision in subdivisions" class="nav-item">
-                            <a class="nav-link" href="#">{{ subdivision.name }}</a>
+                            <span class="nav-link" href="#">{{ subdivision.name }}</span>
                         </li>
                         <li class="nav-item mt-5">
-                            <button class="btn btn-outline-primary">Подробнее о подразделениях</button>
+                            <a href="/subdivisions">
+                                <button class="btn btn-outline-primary">Подробнее о подразделениях</button>
+                            </a>
+
                         </li>
                     </ul>
                 </div>
@@ -37,6 +40,8 @@
                     <table-component
                         :fields="fields"
                         :items="employees"
+                        :perPage="10"
+                        :currentPage="currentPage"
                     >
                         <template v-slot:fullName="row">
                             {{ fullName(row.data.surname, row.data.name, row.data.patronymic) }}
@@ -65,7 +70,7 @@
 
                                 <div class="card-body">
                                     <div class="row mb-2">
-                                        <div class="text-sm-right col-sm-3">
+                                        <div class="property">
                                             <b>ФИО:</b>
                                         </div>
                                         <div class="col">
@@ -74,21 +79,21 @@
                                     </div>
 
                                     <div class="row mb-2">
-                                        <div class="text-sm-right col-sm-3">
+                                        <div class="property">
                                             <b>Дата рождения:</b>
                                         </div>
                                         <div class="col">{{ row.data.birthday }}</div>
                                     </div>
 
                                     <div class="row mb-2">
-                                        <div class="text-sm-right col-sm-3">
+                                        <div class="property">
                                             <b>Оклад:</b>
                                         </div>
                                         <div class="col">{{ row.data.salary }}</div>
                                     </div>
 
                                     <div class="row mb-2">
-                                        <div class="text-sm-right col-sm-3">
+                                        <div class="property">
                                             <b>Ставка:</b>
                                         </div>
                                         <div class="col">{{ row.data.rate }}</div>
@@ -101,6 +106,7 @@
                 </div>
 
             </div>
+
         </template>
 
     </div>
@@ -108,12 +114,14 @@
 
 <script>
     import TableComponent from "./TableComponent";
+    import ModalComponent from "./ModalComponent";
     export default {
         name: "Employees",
-      components: {TableComponent},
+      components: {ModalComponent, TableComponent},
       data() {
             return {
                 inProgress: false,
+                currentPage: 1,
                 fields: [
                     {
                         key: 'fullName',
@@ -138,22 +146,25 @@
                 ],
                 subdivisions: [ { name: 'Южное' }, { name: 'Северное' }, { name: 'Западное' }, { name: 'Восточное' }, ],
                 items: [],
-                employees: [ { name: 'Ivanov', surname: 'Ivan', patronymic: 'Ivanovich', id: 1, subdivision: 'Северное', post: 'Директор' }, { name: 'Ivanov', surname: 'Ivan', patronymic: 'Ivanovich', id: 2, subdivision: 'Северное', post: 'Директор' } ]
+                //employees: [ { name: 'Ivanov', surname: 'Ivan', patronymic: 'Ivanovich', id: 1, subdivision: 'Северное', post: 'Директор' }, { name: 'Ivanov', surname: 'Ivan', patronymic: 'Ivanovich', id: 2, subdivision: 'Северное', post: 'Директор' } ]
             }
         },
         computed: {
-            // employees: function () {
-            //     let newItems = this.$store.getters.employees.slice().sort(function (a, b) {
-            //         return (a.surname > b.surname) ? 1 : ((b.surname > a.surname) ? -1 : 0)
-            //     })
-            //     if (this.currentFilter) {
-            //         return newItems.filter((item) => {
-            //             return item.subdivision === this.currentFilter
-            //         })
-            //     } else {
-            //         return  newItems
-            //     }
-            // }
+            employees: function () {
+
+                let newItems = this.$store.getters.employees.slice().sort(function (a, b) {
+                    return (a.surname > b.surname) ? 1 : ((b.surname > a.surname) ? -1 : 0)
+                })
+
+                if (this.currentFilter) {
+                    return newItems.filter((item) => {
+                        return item.subdivision === this.currentFilter
+                    })
+                } else {
+                    return  newItems
+
+                }
+            }
         },
           methods: {
                 changeFilter: function (name) {

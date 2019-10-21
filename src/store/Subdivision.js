@@ -2,41 +2,42 @@ import axios from 'axios'
 
 export default {
     state: {
-        employees: [],
+        subdivisions: [],
         inProgress: false
     },
     mutations: {
-        newEmployee: (state, payload) => {
-            state.employees.push(payload)
+        newSubdivision: (state, payload) => {
+            state.subdivisions.push(payload)
         },
 
-        getEmployees: (state, payload) => {
-            state.employees = payload
+        getSubdivisions: (state, payload) => {
+            state.subdivisions = payload
         },
 
-        updateEmployee: (state, payload) => {
-            let targetIndex = state.employees.findIndex(object => object.id === payload.id)
-            state.employees.splice(targetIndex, 1, payload);
+        updateSubdivision: (state, payload) => {
+            let targetIndex = state.subdivisions.findIndex(object => object.id === payload.id)
+            state.subdivisions.splice(targetIndex, 1, payload);
         }
     },
     actions: {
-        addNewEmployee ({commit}, payload) {
-            commit('newEmployee', payload)
+        addNewSubdivision ({commit}, payload) {
+            commit('newSubdivision', payload)
         },
 
-        getEmployees ({commit}) {
-            axios.get('http://musiclibrary/employees')
+        getSubdivisions ({commit}) {
+            axios.get('http://musiclibrary/subdivisions')
                 .then(response => {
-                    commit('getEmployees', response.data.data)
+                    console.log(response)
+                    commit('getSubdivisions', response.data.data.subdivisions)
                 })
         },
-        updateEmployee ({commit}, payload) {
-            commit('updateEmployee', payload)
+        updateSubdivision ({commit}, payload) {
+            commit('updateSubdivision', payload)
         },
     },
     getters: {
-        employees (state) {
-            return state.employees
+        subdivisions (state) {
+            return state.subdivisions
         }
     }
 }
