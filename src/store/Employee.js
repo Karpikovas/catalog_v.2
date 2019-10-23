@@ -85,11 +85,14 @@ export default {
 
         getEmployees ({commit}) {
             commit('updateLoad', true)
-            axios.get('http://musiclibrary/employees')
-                .then(response => {
-                    commit('getEmployees', response.data.data)
-                    commit('updateLoad', false)
-                })
+            return new Promise((resolve, reject) => {
+                axios.get('http://musiclibrary/employees')
+                    .then(response => {
+                        commit('getEmployees', response.data.data)
+                        commit('updateLoad', false)
+                        resolve();
+                    })
+            });
         },
 
         updateEmployee ({commit}, payload) {

@@ -58,12 +58,17 @@ export default {
         getSubdivisions ({commit}) {
             commit('updateLoad', true)
 
-            axios.get('http://musiclibrary/subdivisions')
-                .then(response => {
-                    commit('getSubdivisions', response.data.data.subdivisions)
-                    commit('getPosts', response.data.data.posts)
-                    commit('updateLoad', false)
-                })
+            return new Promise((resolve, reject) => {
+                axios.get('http://musiclibrary/subdivisions')
+                    .then(response => {
+                        commit('getSubdivisions', response.data.data.subdivisions)
+                        commit('getPosts', response.data.data.posts)
+                        commit('updateLoad', false)
+                        resolve()
+                    })
+            });
+
+
         },
         updateSubdivision ({commit}, payload) {
             commit('updateLoad', true)
