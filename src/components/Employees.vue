@@ -14,7 +14,7 @@
 
                 <!--------------------- Колонка с подразделениями  -------------------->
 
-                <div class="col-2 position-fixed divider">
+                <div class="col-2 position-fixed sidebar">
                     <ul class="nav flex-column mt-2 text-center">
 
                         <li class="nav-item">
@@ -29,7 +29,7 @@
                             @click="changeFilter(subdivision.name)">
                             <span class="nav-link" href="#">{{ subdivision.name }}</span>
                         </li>
-                        <li class="nav-item mt-5">
+                        <li class="nav-item">
                             <a href="/subdivisions">
                                 <button class="btn btn-outline-primary">Подробнее о подразделениях</button>
                             </a>

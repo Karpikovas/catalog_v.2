@@ -10,7 +10,7 @@
 
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
-                        <button class="btn btn-pill btn-success my-2 my-sm-0" @click="modalAddShow">Добавить сотрудника</button>
+                        <button class="btn btn-pill btn-success my-2 my-sm-0" @click="modalAddShow"></button>
                     </li>
                 </ul>
             </nav>
