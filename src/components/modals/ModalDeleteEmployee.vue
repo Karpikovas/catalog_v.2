@@ -28,7 +28,8 @@
                 this.$emit('input', value);
             },
             onDeleteClick() {
-                this.$store.dispatch('deleteEmployee', employees.id)
+                this.$store.dispatch('deleteEmployee', this.employee.id)
+                this.toggle(false)
             }
         }
     }

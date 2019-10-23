@@ -2,7 +2,8 @@ import axios from 'axios'
 
 export default {
     state: {
-        employees: []
+        employees: [],
+        isLoading: false
     },
     mutations: {
         newEmployee: (state, payload) => {
@@ -19,14 +20,19 @@ export default {
         },
 
         deleteEmployee: (state, payload) => {
-            state.employees = state.employee.filter((item) => {
+            state.employees = state.employees.filter((item) => {
                 return item.id !== payload
             })
+        },
+
+        updateLoad: (state, payload) => {
+            state.isLoading = payload
         }
     },
     actions: {
         addNewEmployee ({commit}, payload) {
 
+            commit('updateLoad', true)
 
             let data = {
                 surname: payload.fullName.split(' ')[0],
@@ -64,26 +70,30 @@ export default {
                         })
                             .then(response => {
                                 commit('newEmployee', data)
+                                commit('updateLoad', false)
                             })
                             .catch(response => {
                                 console.log(response)
                             })
                     } else {
                         commit('newEmployee', data)
+                        commit('updateLoad', false)
                     }
                 })
 
         },
 
         getEmployees ({commit}) {
+            commit('updateLoad', true)
             axios.get('http://musiclibrary/employees')
                 .then(response => {
                     commit('getEmployees', response.data.data)
+                    commit('updateLoad', false)
                 })
         },
 
         updateEmployee ({commit}, payload) {
-
+            commit('updateLoad', true)
             let data =  {
                 id: payload.id,
                 surname: payload.fullName.split(' ')[0],
@@ -117,16 +127,20 @@ export default {
 
             axios.all(promises)
                 .then(response => {
+                    console.log(response)
                     commit('updateEmployee', data)
+                    commit('updateLoad', false)
                 })
 
         },
 
         deleteEmployee({commit}, payload) {
+            commit('updateLoad', true)
             axios.post(`http://musiclibrary/employees/${payload}/delete`)
                 .then(response => {
 
-
+                    commit('deleteEmployee', payload)
+                    commit('updateLoad', false)
 
                 })
         }
@@ -134,6 +148,9 @@ export default {
     getters: {
         employees (state) {
             return state.employees
+        },
+        isLoadingEmployees (state) {
+            return state.isLoading
         }
     }
 }
